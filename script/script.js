@@ -5,6 +5,16 @@ const wordsList = document.getElementById("words-list");
 const caoruselButtonPrev = document.getElementById("cards-carousel-prev");
 const caoruselButtonNext = document.getElementById("cards-carousel-next");
 const saveWordButton = document.getElementById("save-word-button");
+const cardModeButton = document.getElementById("card-mode-button");
+const translationModeButton = document.getElementById("translation-mode-button");
+
+const wordsProgressBar = document.getElementById("words-progress-bar");
+const translationModeBlock = document.getElementById("translation-mode-block");
+const translationModeWord = document.getElementById("translation-mode-word");
+const translationModeInput = document.getElementById("translation-mode-input");
+const translateModeCheckButton = document.getElementById("translate-mode-check-button");
+const translateModeSkipButton = document.getElementById("translate-mode-skip-button");
+const translateModeNextButton = document.getElementById("translate-mode-next-button");
 
 const wordAlertSuccess = document.getElementById("word-alert-success-wrapper");
 const bsWordAlertSuccess = new bootstrap.Collapse(wordAlertSuccess, {
@@ -31,6 +41,22 @@ if (!localStorage.getItem("words")) {
   localStorage.setItem("words", JSON.stringify([]));
 }
 let words = JSON.parse(localStorage.getItem("words"));
+let isCardMode = false;
+let isTranslationMode = false;
+
+const getRandomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+const shuffleArray = (array) => {
+  const shuffledArray = [...array];
+  for (var i = shuffledArray.length - 1; i > 0; i--) {
+    var j = getRandomNumber(0, i);
+    var temp = shuffledArray[i];
+    shuffledArray[i] = shuffledArray[j];
+    shuffledArray[j] = temp;
+  }
+  return shuffledArray;
+};
 
 const addCard = (word, index) => {
   const layout = `<div class="carousel-item${index ? "" : " active"}">
@@ -110,16 +136,13 @@ saveWordButton.onclick = () => {
   }
 
   bsWordAlertSuccess.show();
+
   words.push({ word: wordInput.value, translation: wordTranslationInput.value });
   localStorage.setItem("words", JSON.stringify(words));
-  addCard(words[words.length - 1], words.length - 1);
 
-  wordsList.innerHTML += `<div class="card">
-  <div class="card-body d-flex justify-content-around">
-    <p class="w-25">${wordInput.value}</p>
-    <p class="w-25">${wordTranslationInput.value}</p>
-  </div>
-</div>`;
+  addCard(words[words.length - 1], words.length - 1);
+  addWordToList(words[words.length - 1], words.length - 1);
+
   wordInput.value = "";
   wordTranslationInput.value = "";
 };
@@ -132,6 +155,48 @@ carouselInner.onclick = () => {
 
   rotationDegree = rotationDegree == 0 ? 180 : 0;
   flipCardInner.style.transform = `rotateY(${rotationDegree}deg)`;
+};
+
+const changeProgressbarValue = (index, length) => {
+  wordsProgressBar.style.width = `${(index / length) * 100}%`;
+  wordsProgressBar.textContent = `${index}/${length}`;
+};
+cardModeButton.onclick = () => {
+  if (isCardMode) {
+    return;
+  }
+  isCardMode = true;
+  isTranslationMode = false;
+  printCards();
+  cardModeButton.classList.add("btn-success");
+  cardModeButton.classList.remove("btn-secondary");
+  translationModeButton.classList.add("btn-secondary");
+  translationModeButton.classList.remove("btn-success");
+
+  document.getElementById("mode-label").classList.add("visually-hidden");
+  carousel.classList.remove("visually-hidden");
+  translationModeBlock.classList.add("visually-hidden");
+};
+translationModeButton.onclick = () => {
+  if (isTranslationMode) {
+    return;
+  }
+  isTranslationMode = true;
+  isCardMode = false;
+  quizWords = shuffleArray(words);
+
+  translationModeWord.textContent = quizWords[quizWords.length - 1].word;
+
+  changeProgressbarValue(0, words.length);
+
+  translationModeButton.classList.add("btn-success");
+  translationModeButton.classList.remove("btn-secondary");
+  cardModeButton.classList.add("btn-secondary");
+  cardModeButton.classList.remove("btn-success");
+
+  document.getElementById("mode-label").classList.add("visually-hidden");
+  translationModeBlock.classList.remove("visually-hidden");
+  carousel.classList.add("visually-hidden");
 };
 
 carousel.addEventListener("slid.bs.carousel", function (event) {
@@ -148,5 +213,27 @@ carousel.addEventListener("slid.bs.carousel", function (event) {
   }
 });
 
-printCards();
 printWordsList();
+
+let quizWords;
+
+translateModeCheckButton.onclick = () => {
+  if (translationModeInput.value !== quizWords[quizWords.length - 1].translation) {
+    console.log("Wrong!");
+  } else {
+    console.log("Correct!");
+  }
+  translateModeCheckButton.classList.add("visually-hidden");
+  translateModeSkipButton.classList.add("visually-hidden");
+  translateModeNextButton.classList.remove("visually-hidden");
+};
+
+translateModeNextButton.onclick = () => {
+  quizWords.pop();
+  translationModeWord.textContent = quizWords[quizWords.length - 1].word;
+  translationModeInput.value = "";
+  changeProgressbarValue(words.length - quizWords.length, words.length);
+  translateModeCheckButton.classList.remove("visually-hidden");
+  translateModeSkipButton.classList.remove("visually-hidden");
+  translateModeNextButton.classList.add("visually-hidden");
+};
