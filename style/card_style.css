@@ -4,13 +4,6 @@
   perspective: 5000px;
 }
 
-.btn:focus,
-.btn:active {
-  border: none !important;
-  outline: none !important;
-  box-shadow: none;
-}
-
 .carousel-control-prev,
 .carousel-control-next {
   top: auto;
