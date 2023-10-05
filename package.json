@@ -12,6 +12,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "parcel build /*.html --public-url /Palmo-Internship-JS-project2/" 
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NikBaranovich/Palmo-Internship-JS-project2.git"
+  },
   "author": "",
   "license": "ISC",
   "description": ""
