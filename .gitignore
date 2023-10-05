@@ -1,3 +1,5 @@
 node_modules/
 style/main.scss
 style/main.css.map
+dist/
+.parcel-cache/
