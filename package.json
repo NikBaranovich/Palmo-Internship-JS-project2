@@ -7,10 +7,10 @@
   "name": "palmo-internship-js-project2",
   "version": "1.0.0",
   "main": "index.js",
-  "homepage": "https://nikbaranovich.github.io/Palmo-Internship-JS-project2/",
+  "homepage": "https://nikbaranovich.github.io/",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build /*.html --public-url /Palmo-Internship-JS-project2/" 
+    "build": "parcel build /*.html --public-url /" 
   },
   "repository": {
     "type": "git",
