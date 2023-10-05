@@ -6,10 +6,10 @@
   },
   "name": "palmo-internship-js-project2",
   "version": "1.0.0",
-  "main": "sript.js",
+  "main": "./script/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "parcel build ./index.html --public-url /Palmo-Internship-JS-project2/" 
+    "build": "parcel build ./*.html --public-url /Palmo-Internship-JS-project2/" 
   },
   "author": "",
   "license": "ISC",

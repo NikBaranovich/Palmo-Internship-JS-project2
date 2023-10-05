@@ -2,10 +2,13 @@
 .blur::selection {
   color: transparent;
   text-shadow: 0 0 8px #000;
+  cursor: pointer;
 }
 .correct-input {
   border-color: green;
+  border-width: 2px;
 }
 .incorrect-input {
   border-color: red;
+  border-width: 2px;
 }
