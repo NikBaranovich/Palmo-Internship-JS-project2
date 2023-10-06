@@ -25,7 +25,7 @@
     <div class="d-flex align-items-center flex-column">
       <div class="w-50% py-5" id="mode-label">
         <p class="fs-1 text-muted fw-bold text-center">Don't know where to start?</p>
-        <p class="fs-1 text-muted fw-bold">
+        <p class="fs-1 text-muted text-center fw-bold">
           Click on one of the modes and start your training today!
         </p>
       </div>
@@ -36,8 +36,9 @@
         data-bs-interval="false"
       >
         <div class="carousel-inner py-5"></div>
+
         <button
-          class="btn carousel-control-prev"
+          class="btn carousel-control-prev top-0 bottom-0"
           id="cards-carousel-prev"
           type="button"
           data-bs-target="#cards-carousel"
@@ -46,7 +47,7 @@
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         </button>
         <button
-          class="btn carousel-control-next"
+          class="btn carousel-control-next top-0 bottom-0"
           id="cards-carousel-next"
           type="button"
           data-bs-target="#cards-carousel"
@@ -85,15 +86,15 @@
             placeholder="Your translation here"
           />
         </div>
-        <div class="my-3 w-50 d-flex justify-content-between">
+        <div class="my-3 w-50 d-flex flex-wrap justify-content-between">
           <button
             type="button"
             id="translation-mode-check-button"
-            class="btn btn-primary flex-grow-1"
+            class="btn btn-primary col-12 col-sm-12 col-md-7 col-lg-8"
           >
             Check
           </button>
-          <button type="button" id="translation-mode-skip-button" class="btn btn-danger w-25 ms-2">
+          <button type="button" id="translation-mode-skip-button" class="btn btn-danger col-12 col-sm-12 col-md-4 col-lg-3">
             Skip
           </button>
           <button
@@ -114,7 +115,7 @@
       </div>
 
       <!-- Words List -->
-      <div class="d-flex flex-column w-50 my-4">
+      <div class="d-flex flex-column col-lg-6 col-11 my-4">
         <p class="fw-bold fs-3">Your words</p>
         <div class="d-flex flex-column" id="words-list"></div>
       </div>
@@ -219,8 +220,8 @@
       </div>
     </div>
 
-    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./index.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./script/index.js"></script>
     <script src="./script/card_mode_script.js"></script>
     <script src="./script/translation_mode_script.js"></script>
   </body>

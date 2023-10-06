@@ -55,10 +55,22 @@ translationModeButton.onclick = () => {
 };
 
 translationModeCheckButton.onclick = () => {
-  if (translationModeInput.value !== quizWords[quizWords.length - 1].translation) {
+  if (
+    translationModeInput.value.toLowerCase() !==
+    quizWords[quizWords.length - 1].translation.toLowerCase()
+  ) {
     displayErrorInput(translationInputResult, translationModeInput);
   } else {
     displaySuccessInput(translationInputResult, translationModeInput);
+
+    const bage = document.querySelector(
+      `.badge[data-word-id="${quizWords[quizWords.length - 1].id}"]`
+    );
+    if (bage) {
+      showElement(bage);
+      quizWords[quizWords.length - 1].learned = true;
+    }
+
     score++;
   }
   hideElement(translationModeCheckButton);
@@ -73,7 +85,6 @@ translationModeNextButton.onclick = () => {
 
     hideElement(translationModeWord);
     hideElement(translationModeInput);
-    hideElement(translationModeNextButton);
     hideElement(translationModeNextButton);
 
     showElement(translationModeStartButton);
@@ -94,6 +105,21 @@ translationModeNextButton.onclick = () => {
 
 translationModeSkipButton.onclick = () => {
   quizWords.pop();
+  if (!quizWords.length) {
+    clearInput(translationInputResult, translationModeInput);
+
+    hideElement(translationModeWord);
+    hideElement(translationModeInput);
+    hideElement(translationModeSkipButton);
+    hideElement(translationModeCheckButton);
+
+    showElement(translationModeStartButton);
+    showElement(translationModeResult);
+
+    translationModeResult.textContent = `Great! Your score is ${score}/${quizWordsLength}`;
+    changeProgressbarValue(quizWordsLength, quizWordsLength);
+    return;
+  }
   translationModeWord.textContent = quizWords[quizWords.length - 1].word;
   clearInput(translationInputResult, translationModeInput);
   changeProgressbarValue(quizWordsLength - quizWords.length, quizWordsLength);

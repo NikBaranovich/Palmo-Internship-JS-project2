@@ -57,18 +57,33 @@ const showElement = (element) => {
 };
 
 const addWordToList = (word, index) => {
-  const layout = `<div class="card mb-2 d-flex flex-row">
-  <div class="card-body d-flex justify-content-around align-items-center flex-grow-1">
-    <p class="w-25 mb-0 text-center">${word.word}</p>
-    <p class="w-25 mb-0 text-center blur" onclick="this.classList.toggle('blur')">
-      ${word.translation}
-    </p>
+  const layout = `
+    <div class="card mb-2 flex-row row">
+    <div class="card-body row flex-row flex-wrap col-12 col-sm-10">
+      <div class="col-sm-2 col-12 d-flex align-items-center justify-content-center">
+        <span
+        class="badge bg-success ${word.learned ? "" : "visually-hidden"}"
+        data-word-id="${word.id}">
+        Learned
+        </span>      
+      </div>
+      <div class="col-sm-10 col-12 d-flex flex-row justify-content-around flex-wrap align-items-center">
+        <p class="mb-0 text-center">${word.word}</p>
+        <p class="mb-0 text-center blur" onclick="this.classList.toggle('blur')">
+          ${word.translation}
+        </p>
+      </div>
+    </div>
+    <div class="btn-group-vertical word-action-buttons col- 2 col-sm-2 px-0" role="group">
+      <button class="btn btn-secondary edit-word-button" data-word-id="${word.id}">
+        Edit
+      </button>
+      <button class="btn btn-danger remove-word-button" data-word-id="${word.id}">
+        Remove
+      </button>
+    </div>
   </div>
-  <div class="btn-group-vertical word-action-buttons" role="group">
-    <button class="btn btn-secondary edit-word-button" data-word-id = "${word.id}">Edit</button>
-    <button class="btn btn-secondary remove-word-button" data-word-id = "${word.id}">Remove</button>
-  </div>
-</div>`;
+`;
   if (index == 0) {
     wordsList.innerHTML = layout;
     return;
@@ -110,22 +125,25 @@ saveWordButton.onclick = () => {
   }
 
   bsWordAlertSuccess.show();
+
   const id = words[words.length - 1] ? words[words.length - 1].id + 1 : 0;
   words.push({
     id: id,
     word: wordInput.value,
     translation: wordTranslationInput.value,
+    learned: false,
   });
   localStorage.setItem("words", JSON.stringify(words));
 
-  addCard(words[words.length - 1], words.length - 1);
+  if (isCardMode) {
+    addCard(words[words.length - 1], words.length - 1);
+  }
+
   addWordToList(words[words.length - 1], words.length - 1);
 
   wordInput.value = "";
   wordTranslationInput.value = "";
 };
-
-printWordsList();
 
 wordsList.addEventListener("click", (event) => {
   const target = event.target;
@@ -162,7 +180,9 @@ saveWordEditButton.addEventListener("click", () => {
   word.translation = wordTranslationInput.value;
   localStorage.setItem("words", JSON.stringify(words));
   printWordsList();
-  printCards();
+  if (isCardMode) {
+    printCards();
+  }
   bsEditModal.hide();
 });
 
@@ -173,6 +193,10 @@ deleteWordModalButton.addEventListener("click", () => {
   });
   localStorage.setItem("words", JSON.stringify(words));
   printWordsList();
-  printCards();
+  if (isCardMode) {
+    printCards();
+  }
   bsDeleteModal.hide();
 });
+
+printWordsList();
