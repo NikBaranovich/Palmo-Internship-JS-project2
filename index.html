@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Learning English words</title>
-    <link rel="stylesheet" href="./style/card_style.css" />
     <link rel="stylesheet" href="./style/main.css" />
+    <link rel="stylesheet" href="./style/card_style.css" />
     <link rel="stylesheet" href="./style/style.css" />
   </head>
   <body>
@@ -94,7 +94,11 @@
           >
             Check
           </button>
-          <button type="button" id="translation-mode-skip-button" class="btn btn-danger col-12 col-sm-12 col-md-4 col-lg-3">
+          <button
+            type="button"
+            id="translation-mode-skip-button"
+            class="btn btn-danger col-12 col-sm-12 col-md-4 col-lg-3"
+          >
             Skip
           </button>
           <button
@@ -146,16 +150,18 @@
               </div>
             </div>
             <label for="word-input" class="col-form-label">Your word:</label>
-            <input type="text" class="form-control" id="word-input" />
+            <input type="text" class="form-control" id="word-input" autocomplete="off"/>
             <label for="word-translation-input" class="col-form-label">Word translation:</label>
-            <input
-              type="text"
-              class="form-control"
-              autocomplete="off"
-              list="translation-options"
-              id="word-translation-input"
-            />
-            <datalist id="translation-options"> </datalist>
+            <fieldset class="position-relative">
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                list=""
+                id="word-translation-input"
+              />
+              <datalist class="visually-hidden" id="translation-options"> </datalist>
+            </fieldset>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -180,11 +186,20 @@
           </div>
           <div class="modal-body">
             <label for="word-edit-input" class="col-form-label">Your word:</label>
-            <input type="text" class="form-control" id="word-edit-input" />
+            <input type="text" class="form-control" autocomplete="off" id="word-edit-input" />
             <label for="word-translation-edit-input" class="col-form-label"
               >Word translation:</label
             >
-            <input type="text" class="form-control" id="word-translation-edit-input" />
+            <fieldset class="position-relative">
+              <input
+                type="text"
+                class="form-control"
+                autocomplete="off"
+                list=""
+                id="word-translation-edit-input"
+              />
+              <datalist class="visually-hidden" id="translation-edit-options"> </datalist>
+            </fieldset>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

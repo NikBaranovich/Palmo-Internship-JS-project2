@@ -1,9 +1,9 @@
-async function fetchTranslation(sl, tl, text) {
+async function fetchTranslation(sourceLanguage, translationLanguage, text) {
   const response = await fetch(
-    `https://translate.googleapis.com/translate_a/single?client=gtx&dt=at&sl=${sl}&tl=${tl}&q=${text}`
+    `https://translate.googleapis.com/translate_a/single?client=gtx&dt=at&sl=${sourceLanguage}&tl=${translationLanguage}&q=${text}`
   );
   const translation = await response.json();
-  return translation;
+  return translation[5][0][2];
 }
 
 const wordInput = document.getElementById("word-input");
@@ -14,6 +14,9 @@ const wordsList = document.getElementById("words-list");
 const saveWordButton = document.getElementById("save-word-button");
 
 const editModal = document.getElementById("word-edit-modal");
+const wordEditInput = document.getElementById("word-edit-input");
+const datalistEditTranslations = document.getElementById("translation-edit-options");
+const wordTranslationEditInput = document.getElementById("word-translation-edit-input");
 const bsEditModal = new bootstrap.Modal(editModal);
 const saveWordEditButton = document.getElementById("save-word-edit-button");
 
@@ -41,13 +44,6 @@ wordAlertError.addEventListener("show.bs.collapse", function () {
     bsWordAlertError.hide();
   }, 1500);
 });
-
-if (!localStorage.getItem("words")) {
-  localStorage.setItem("words", JSON.stringify([]));
-}
-let words = JSON.parse(localStorage.getItem("words"));
-let isCardMode = false;
-let isTranslationMode = false;
 
 const hideElement = (element) => {
   element.classList.add("visually-hidden");
@@ -102,11 +98,10 @@ const printWordsList = () => {
 
 wordInput.onchange = () => {
   fetchTranslation("ru", "en", wordInput.value).then((translation) => {
-    console.log(translation[5][0][2]);
-    datalistTranslations.innerHTML = translation[5][0][2].reduce(
+    datalistTranslations.innerHTML = translation.reduce(
       (layout, translation) =>
         (layout += `
-    <option value="${translation[0]}"></option>`),
+    <option value="${translation[0]}">${translation[0]}</option>`),
       ``
     );
   });
@@ -156,6 +151,7 @@ wordsList.addEventListener("click", (event) => {
     editModal.setAttribute("data-word-id", wordId);
     bsEditModal.show();
   }
+
   if (target.classList.contains("remove-word-button")) {
     deleteModal.setAttribute("data-word-id", wordId);
     bsDeleteModal.show();
@@ -198,5 +194,93 @@ deleteWordModalButton.addEventListener("click", () => {
   }
   bsDeleteModal.hide();
 });
+
+function handleTranslationInputFocus(datalistTranslations, wordTranslationInput) {
+  showElement(datalistTranslations);
+  wordTranslationInput.classList.add("input-datalist");
+}
+
+function handleTranslationInputClick(event, wordTranslationInput) {
+  const target = event.target;
+  wordTranslationInput.value = target.value;
+}
+
+function handleTranslationInputFocusOut(datalistTranslations, wordTranslationInput) {
+  setTimeout(() => {
+    hideElement(datalistTranslations);
+    wordTranslationInput.classList.remove("input-datalist");
+  }, 150);
+}
+
+function handleTranslationInput(wordTranslationInput, datalistTranslations) {
+  let hasDisplayedElement = false;
+  const text = wordTranslationInput.value.toLowerCase();
+  for (let option of datalistTranslations.options) {
+    if (option.value.toLowerCase().indexOf(text) > -1) {
+      option.style.display = "block";
+      hasDisplayedElement = true;
+    } else {
+      option.style.display = "none";
+    }
+  }
+  if (hasDisplayedElement) {
+    showElement(datalistTranslations);
+    wordTranslationInput.classList.add("input-datalist");
+  } else {
+    hideElement(datalistTranslations);
+    wordTranslationInput.classList.remove("input-datalist");
+  }
+}
+
+wordTranslationInput.onfocus = () => {
+  handleTranslationInputFocus(datalistTranslations, wordTranslationInput);
+};
+
+datalistTranslations.addEventListener("click", (event) => {
+  handleTranslationInputClick(event, wordTranslationInput);
+});
+
+wordTranslationInput.addEventListener("focusout", () => {
+  handleTranslationInputFocusOut(datalistTranslations, wordTranslationInput);
+});
+
+wordTranslationInput.oninput = function () {
+  handleTranslationInput(wordTranslationInput, datalistTranslations);
+};
+
+
+wordTranslationEditInput.onfocus = () => {
+  handleTranslationInputFocus(datalistEditTranslations, wordTranslationEditInput);
+};
+
+datalistEditTranslations.addEventListener("click", (event) => {
+  handleTranslationInputClick(event, wordTranslationEditInput);
+});
+
+wordTranslationEditInput.addEventListener("focusout", () => {
+  handleTranslationInputFocusOut(datalistEditTranslations, wordTranslationEditInput);
+});
+
+wordTranslationEditInput.oninput = function () {
+  handleTranslationInput(wordTranslationEditInput, datalistEditTranslations);
+};
+
+wordEditInput.onchange = () => {
+  fetchTranslation("ru", "en", wordEditInput.value).then((translation) => {
+    datalistEditTranslations.innerHTML = translation.reduce(
+      (layout, translation) =>
+        (layout += `
+    <option value="${translation[0]}">${translation[0]}</option>`),
+      ``
+    );
+  });
+};
+
+if (!localStorage.getItem("words")) {
+  localStorage.setItem("words", JSON.stringify([]));
+}
+let words = JSON.parse(localStorage.getItem("words"));
+let isCardMode = false;
+let isTranslationMode = false;
 
 printWordsList();
